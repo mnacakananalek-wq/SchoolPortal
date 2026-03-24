@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Информатика — Школьный портал</title>
+  <link rel="stylesheet" href="styles (1).css" />
+  <style>
+    .py-container {
+      background: #1e1e1e;
+      border-radius: 12px;
+      overflow: hidden;
+      font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+    }
+    
+    .py-header {
+      background: #2d2d2d;
+      padding: 12px 16px;
+      color: #cccccc;
+      font-size: 14px;
+      border-bottom: 1px solid #3e3e3e;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .py-editor {
+      width: 100%;
+      min-height: 150px;
+      max-height: 300px;
+      background: #1e1e1e;
+      border: none;
+      color: #d4d4d4;
+      font-family: inherit;
+      font-size: 16px;
+      line-height: 1.5;
+      padding: 16px;
+      resize: vertical;
+      outline: none;
+      box-sizing: border-box;
+      tab-size: 4;
+    }
+    
+    .py-toolbar {
+      background: #2d2d2d;
+      padding: 12px;
+      border-top: 1px solid #3e3e3e;
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    
+    .py-btn {
+      background: #0e639c;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      transition: background 0.2s;
+    }
+    
+    .py-btn:hover { background: #1177bb; }
+    .py-btn:active { transform: scale(0.98); }
+    .py-btn.secondary { background: #3e3e3e; }
+    .py-btn.secondary:hover { background: #4e4e4e; }
+    .py-btn:disabled {
+      background: #555;
+      cursor: not-allowed;
+      opacity: 0.7;
+    }
+    
+    .py-console {
+      background: #0d0d0d;
+      color: #d4d4d4;
+      padding: 16px;
+      min-height: 250px;
+      max-height: 500px;
+      overflow-y: auto;
+      font-size: 14px;
+      line-height: 1.6;
+      border-top: 1px solid #3e3e3e;
+      position: relative;
+    }
+    
+    .console-content {
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+    
+    .input-line {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 4px;
+    }
+    
+    .input-prompt {
+      color: #569cd6;
+      font-weight: bold;
+      white-space: nowrap;
+    }
+    
+    .console-input {
+      background: transparent;
+      border: none;
+      color: #d4d4d4;
+      font-family: inherit;
+      font-size: 14px;
+      outline: none;
+      flex: 1;
+      min-width: 50px;
+      padding: 0;
+      margin: 0;
+    }
+    
+    .error { color: #f48771; }
+    .success { color: #7ee787; }
+    .info { color: #9cdcfe; }
+    
+    @media (max-width: 768px) {
+      .py-editor { font-size: 16px; min-height: 120px; }
+      .py-btn { padding: 12px 16px; font-size: 16px; }
+      .py-console { font-size: 14px; min-height: 200px; }
+    }
+    
+    [data-theme="light"] .py-container { background: #fafafa; }
+    [data-theme="light"] .py-header,
+    [data-theme="light"] .py-toolbar { background: #f0f0f0; border-color: #e0e0e0; }
+    [data-theme="light"] .py-editor { background: #ffffff; color: #333; }
+    [data-theme="light"] .py-console { background: #f5f5f5; color: #333; border-color: #e0e0e0; }
+    [data-theme="light"] .input-prompt { color: #0066cc; }
+    [data-theme="light"] .console-input { color: #333; }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="logo" href="./index (1).html">Школьный портал</a>
+      <nav class="nav">
+        <a href="./index (1).html" class="nav-link">Главная</a>
+        <a href="./subjects (1).html" class="nav-link">Учебные материалы</a>
+        <a href="./contact (1).html" class="nav-link">Связь</a>
+      </nav>
+      <button class="mobile-menu-btn" id="mobileMenuBtn" title="Меню">☰</button>
+      <div class="mobile-dropdown" id="mobileDropdown">
+        <a href="./index (1).html" class="nav-link">Главная</a>
+        <a href="./subjects (1).html" class="nav-link">Учебные материалы</a>
+        <a href="./contact (1).html" class="nav-link">Связь</a>
+      </div>
+      <button class="theme-toggle" data-toggle-theme title="Переключить тему">
+        <span class="toggle-slider"></span>
+      </button>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="breadcrumbs"><a class="link" href="./subjects (1).html">Предметы</a> / Информатика</div>
+    <h1 class="section-title">Информатика</h1>
+
+    <div data-tabs>
+      <div class="tabs">
+        <button class="tab active" data-tab="theory">Теория</button>
+        <button class="tab" data-tab="interactive">Интерактивная часть</button>
+      </div>
+      <div class="tabpanes">
+        <section class="active" data-pane="theory">
+          <div class="card">
+            <h3 class="card-title">📚 Теория по информатике</h3>
+            <div class="tools-row" style="gap:8px; flex-wrap: wrap;">
+              <label for="it-class-select" class="sr-only">Выбор класса</label>
+              <select id="it-class-select" class="input" style="max-width:260px;">
+                <option value="all">Вся теория</option>
+                <option value="7">7 класс</option>
+                <option value="8">8 класс</option>
+                <option value="9">9 класс</option>
+                <option value="10">10 класс</option>
+                <option value="11">11 класс</option>
+              </select>
+              <input id="it-theory-search" class="input" placeholder="Поиск (например: алгоритм, массив, сеть, ИБ, SQL)" />
+            </div>
+            <div id="it-theory-container" class="card-text"></div>
+            <div class="card-text" id="it-legacy">
+              <h4>ИНФОРМАТИКА: ПОЛНЫЙ КУРС ТЕОРИИ</h4>
+
+              <h5>7 КЛАСС</h5>
+              <h6>1. Информация и информационные процессы</h6>
+              <ul>
+                <li>Информация – сведения о мире, которые можно передать, сохранить или обработать.</li>
+                <li>Информационные процессы: сбор, хранение, передача, обработка информации.</li>
+                <li>Единицы измерения информации: бит, байт, килобайт и т.д.</li>
+                <li>Системы счисления: двоичная, восьмеричная, десятичная, шестнадцатеричная.</li>
+                <li>Перевод чисел между системами счисления.</li>
+              </ul>
+
+              <h6>2. Компьютер как универсальное устройство обработки информации</h6>
+              <ul>
+                <li>Основные компоненты компьютера: процессор, память, устройства ввода-вывода.</li>
+                <li>Программное обеспечение: системное и прикладное.</li>
+                <li>Операционные системы: Windows, Linux, macOS.</li>
+                <li>Файлы и файловые системы.</li>
+              </ul>
+
+              <h6>3. Алгоритмы и исполнители</h6>
+              <ul>
+                <li>Алгоритм – последовательность действий для решения задачи.</li>
+                <li>Свойства алгоритма: дискретность, определенность, результативность, массовость.</li>
+                <li>Способы записи алгоритмов: словесный, графический (блок-схемы), программный.</li>
+                <li>Исполнители алгоритмов: человек, компьютер, робот.</li>
+              </ul>
+
+              <h6>4. Линейные алгоритмы</h6>
+              <ul>
+                <li>Линейный алгоритм – последовательность действий без ветвлений.</li>
+                <li>Примеры: расчет площади прямоугольника, перевод температуры.</li>
+              </ul>
+
+              <h5>8 КЛАСС</h5>
+              <h6>1. Ветвления и циклы</h6>
+              <ul>
+                <li>Условный оператор (ветвление): если условие истинно, то выполнить одно действие, иначе другое.</li>
+                <li>Циклы: с предусловием, с постусловием, с параметром.</li>
+                <li>Примеры алгоритмов с ветвлениями и циклами.</li>
+              </ul>
+
+              <h6>2. Массивы</h6>
+              <ul>
+                <li>Массив – упорядоченная совокупность элементов одного типа.</li>
+                <li>Одномерные и двумерные массивы.</li>
+                <li>Операции с массивами: поиск, сортировка, вставка, удаление.</li>
+              </ul>
+
+              <h6>3. Подпрограммы</h6>
+              <ul>
+                <li>Подпрограмма – отдельная часть программы, выполняющая определенную задачу.</li>
+                <li>Процедуры и функции.</li>
+                <li>Параметры подпрограмм: формальные и фактические.</li>
+              </ul>
+
+              <h6>4. Работа с файлами</h6>
+              <ul>
+                <li>Файлы: текстовые, бинарные.</li>
+                <li>Операции с файлами: открытие, чтение, запись, закрытие.</li>
+                <li>Форматы файлов: txt, csv, json и др.</li>
+              </ul>
+
+              <h5>9 КЛАСС</h5>
+              <h6>1. Основы программирования</h6>
+              <ul>
+                <li>Языки программирования: Pascal, C++, Python, Java.</li>
+                <li>Переменные, типы данных: целые, вещественные, строковые, логические.</li>
+                <li>Операторы: арифметические, логические, сравнения.</li>
+                <li>Ввод-вывод данных.</li>
+              </ul>
+
+              <h6>2. Структурированное программирование</h6>
+              <ul>
+                <li>Модульное программирование.</li>
+                <li>Отладка и тестирование программ.</li>
+                <li>Документирование кода.</li>
+              </ul>
+
+              <h6>3. Базы данных</h6>
+              <ul>
+                <li>База данных – организованное хранилище данных.</li>
+                <li>Реляционные базы данных: таблицы, связи.</li>
+                <li>SQL: запросы на выборку, вставку, обновление, удаление.</li>
+              </ul>
+
+              <h6>4. Компьютерные сети</h6>
+              <ul>
+                <li>Локальные и глобальные сети.</li>
+                <li>Интернет: протоколы, сервисы.</li>
+                <li>Безопасность в сети: вирусы, фишинг, шифрование.</li>
+              </ul>
+
+              <h5>10-11 КЛАСС</h5>
+              <h6>1. Алгоритмизация и программирование</h6>
+              <ul>
+                <li>Сложность алгоритмов: временная и пространственная.</li>
+                <li>Рекурсия.</li>
+                <li>Объектно-ориентированное программирование: классы, объекты, наследование.</li>
+              </ul>
+
+              <h6>2. Моделирование и компьютерный эксперимент</h6>
+              <ul>
+                <li>Математическое моделирование.</li>
+                <li>Компьютерное моделирование физических, биологических, экономических процессов.</li>
+              </ul>
+
+              <h6>3. Искусственный интеллект</h6>
+              <ul>
+                <li>Машиное обучение: обучение с учителем, без учителя, reinforcement learning.</li>
+                <li>Нейронные сети.</li>
+                <li>Применения ИИ: распознавание образов, экспертные системы, робототехника.</li>
+              </ul>
+
+              <h6>4. Информационная безопасность</h6>
+              <ul>
+                <li>Криптография: симметричное и асимметричное шифрование.</li>
+                <li>Цифровые подписи.</li>
+                <li>Защита информации: антивирусы, firewalls, VPN.</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+        
+        <section data-pane="interactive">
+          <div class="card">
+            <h3 class="card-title">🐍 Python IDE</h3>
+            <p class="card-text">Полный Python 3.11 со всеми командами. Ввод работает прямо в консоли.</p>
+            
+            <div class="py-container">
+              <div class="py-header">
+                <span>📝 Редактор (Tab = 4 пробела)</span>
+                <span id="status" class="info">Загрузка...</span>
+              </div>
+              
+              <textarea class="py-editor" id="codeEditor" spellcheck="false" placeholder="Введите код"></textarea>
+              
+              <div class="py-toolbar">
+                <button class="py-btn" id="runBtn">▶ Выполнить (Ctrl+Enter)</button>
+                <button class="py-btn secondary" id="clearCodeBtn">Очистить код</button>
+                <button class="py-btn secondary" id="clearConsoleBtn">Очистить консоль</button>
+              </div>
+              
+              <div class="py-console" id="console">
+                <div class="console-content" id="consoleContent">Загрузка Python...</div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p>© 2026 Школьный портал</p>
+      <a class="link" href="./contact (1).html">Связаться с нами</a>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/pyodide/v0.25.0/full/pyodide.js"></script>
+  
+  <script>
+    // Теория по информатике 7–11: выбор класса и поиск
+    (function(){
+     const theory = {
+  '7': [
+    {
+      title: 'Информация и процессы',
+      body: 'Информация — сведения об объектах и явлениях окружающего мира. Основные информационные процессы: сбор (накопление), хранение (носители), обработка (преобразование), передача (источник → канал связи → приёмник). Единицы измерения информации: бит (минимальная единица), байт = 8 бит, килобайт (КБ) = 1024 байта, мегабайт (МБ) = 1024 КБ, гигабайт (ГБ) = 1024 МБ. Помехоустойчивость — способность информации сохранять целостность при наличии помех; достигается избыточностью (например, повторением).'
+    },
+    {
+      title: 'Системы счисления',
+      body: 'Система счисления — способ записи чисел с помощью определённых знаков. Позиционные системы: значение цифры зависит от позиции (разряда). Наиболее распространены: двоичная (цифры 0,1), восьмеричная (0-7), десятичная (0-9), шестнадцатеричная (0-9, A-F). Перевод чисел из любой системы в десятичную: умножаем каждую цифру на вес разряда (основание в степени позиции) и суммируем. Обратный перевод (из десятичной в другую) выполняется последовательным делением на основание и сбором остатков. Двоичная система используется в компьютерах для представления данных.'
+    },
+    {
+      title: 'Архитектура компьютера',
+      body: 'Компьютер состоит из аппаратного и программного обеспечения. Аппаратное обеспечение: процессор (выполняет команды), оперативная память ОЗУ (временное хранение данных и программ), постоянная память ПЗУ (хранение неизменяемых данных), устройства ввода (клавиатура, мышь), вывода (монитор, принтер), внешние накопители. Программное обеспечение делится на системное (операционные системы, драйверы) и прикладное (офисные пакеты, игры, браузеры). Операционная система управляет ресурсами и обеспечивает интерфейс. Файловая система организует хранение данных в виде файлов и папок.'
+    },
+    {
+      title: 'Алгоритмы и исполнители',
+      body: 'Алгоритм — точное и понятное предписание исполнителю выполнить конечную последовательность действий, приводящую от исходных данных к результату. Свойства: дискретность (разбиение на шаги), понятность, определённость (однозначность), результативность, массовость (применимость к разным наборам данных). Способы записи: словесное описание, блок-схема (графическое представление), псевдокод (неформальный язык, близкий к программированию). Линейный алгоритм — действия выполняются строго по порядку, без ветвлений и повторений.'
+    }
+  ],
+  '8': [
+    {
+      title: 'Ветвления и циклы',
+      body: 'Ветвление (условный оператор) позволяет выбирать один из вариантов действий в зависимости от условия. В языках программирования: if (условие) { ... } else { ... }. Циклы организуют многократное выполнение блока команд. Виды: цикл с предусловием (while — проверка перед выполнением), с постусловием (do...while — проверка после, хотя бы одно выполнение), с параметром (for — для известного числа повторений). Типовые задачи: подсчёт суммы, поиск максимума, проверка простоты числа, обработка последовательностей.'
+    },
+    {
+      title: 'Массивы и таблицы',
+      body: 'Массив — структура данных для хранения однотипных элементов, доступных по индексу. Одномерный массив (вектор) — линейная последовательность. Двумерный массив (матрица, таблица) — элементы с двумя индексами (строка, столбец). Базовые операции: заполнение, вывод, поиск элемента (линейный поиск), нахождение суммы/среднего, поиск максимального/минимального. Простые сортировки: пузырьковая (сравнение соседей) или выбором (поиск минимума и перестановка). Сложность операций оценивается на качественном уровне (количество сравнений).'
+    },
+    {
+      title: 'Подпрограммы',
+      body: 'Подпрограмма — именованный блок кода, который можно вызывать многократно. Процедура выполняет действия, функция возвращает значение. Параметры — данные, передаваемые в подпрограмму; могут быть формальными (в определении) и фактическими (при вызове). Области видимости определяют, где доступны переменные: локальные (внутри подпрограммы) и глобальные (во всей программе). Подпрограммы упрощают код, позволяют повторное использование, облегчают отладку и модификацию.'
+    },
+    {
+      title: 'Файлы',
+      body: 'Файл — именованная область данных на носителе. Текстовые файлы содержат символы, бинарные — любые данные в двоичном виде. Основные операции: открытие (связь с программой), чтение (получение данных), запись (сохранение), закрытие (освобождение ресурсов). Популярные форматы: .txt (простой текст), .csv (табличные данные, разделённые запятыми), .json (структурированные данные в формате JavaScript Object Notation). При работе с файлами важно обрабатывать ошибки (например, отсутствие файла).'
+    }
+  ],
+  '9': [
+    {
+      title: 'Основы программирования',
+      body: 'Программа — последовательность инструкций на языке программирования. Переменная — именованная область памяти для хранения данных определённого типа (целые, вещественные, символьные, логические). Операции: арифметические (+,-,*,/), сравнения (<,>,==), логические (и, или, не). Ввод данных (например, input() в Python) и вывод (print()). Основные языки: Python (простой, интерпретируемый), C++ (компилируемый, высокопроизводительный), Java (объектно-ориентированный, кроссплатформенный). Отладка — поиск и исправление ошибок, тестирование — проверка работы на разных входных данных.'
+    },
+    {
+      title: 'Структурированное программирование',
+      body: 'Структурированное программирование — подход, основанный на использовании трёх базовых управляющих конструкций (последовательность, ветвление, цикл) и разбиении программы на модули (функции, процедуры). Декомпозиция — разделение сложной задачи на более простые подзадачи. Документирование — описание назначения программы, функций, входных и выходных данных, алгоритма. Тест-кейсы — наборы входных данных с ожидаемыми результатами для проверки правильности. Читаемый код: осмысленные имена переменных, отступы, комментарии.'
+    },
+    {
+      title: 'Базы данных и SQL',
+      body: 'База данных (БД) — организованная совокупность данных. Реляционные БД представляют данные в виде таблиц, связанных между собой. Строка — запись, столбец — поле. Первичный ключ — уникальный идентификатор записи. Внешний ключ связывает таблицы. SQL (Structured Query Language) — язык запросов. Основные команды: SELECT (выборка), INSERT (добавление), UPDATE (изменение), DELETE (удаление). Фильтры WHERE, сортировка ORDER BY, группировка GROUP BY. Пример: SELECT * FROM students WHERE grade > 4 ORDER BY name;'
+    },
+    {
+      title: 'Компьютерные сети',
+      body: 'Компьютерная сеть — соединение компьютеров для обмена данными. LAN (локальная сеть) — в пределах одного здания, WAN (глобальная) — охватывает большие территории. Стек протоколов TCP/IP — набор правил передачи данных: IP отвечает за адресацию, TCP — за надёжную доставку. DNS (Domain Name System) преобразует доменные имена в IP-адреса. HTTP/HTTPS — протоколы для передачи веб-страниц. Основы безопасности: антивирусы, брандмауэры (сетевые экраны), шифрование, сложные пароли, защита от фишинга.'
+    }
+  ],
+  '10': [
+    {
+      title: 'Алгоритмизация',
+      body: 'Асимптотическая сложность алгоритма — оценка роста времени выполнения (или используемой памяти) при увеличении объёма входных данных. Используют обозначения: O (верхняя граница), Ω (нижняя), Θ (точная). Например, O(n) — линейная сложность, O(n²) — квадратичная. Рекурсия — вызов функцией самой себя; важны базовый случай и шаг рекурсии. Стек — структура данных LIFO (последним пришёл — первым вышел), используется при рекурсии и в алгоритмах обхода. Базовые структуры: списки, очереди, стеки, деревья (бинарные, поиска).'
+    },
+    {
+      title: 'ООП (введение)',
+      body: 'Объектно-ориентированное программирование (ООП) — подход, основанный на представлении программы как совокупности объектов. Класс — шаблон (описание), объект — экземпляр класса. Инкапсуляция — объединение данных и методов внутри класса, скрытие деталей реализации. Наследование — создание нового класса на основе существующего (дочерний класс получает свойства и методы родительского). Полиморфизм — возможность объектов разных классов обрабатывать один и тот же метод по-разному. Примеры: класс «Собака» с методами «лаять», наследуется классом «Овчарка».'
+    },
+    {
+      title: 'Моделирование и вычисления',
+      body: 'Модель — упрощённое представление реального объекта или процесса. Математическое моделирование использует математические соотношения (уравнения, функции). Компьютерное моделирование реализует модель в виде программы для исследования поведения системы. Численные методы — приближённые методы решения математических задач (например, нахождение корней уравнений, вычисление интегралов, решение дифференциальных уравнений). Примеры: метод половинного деления, метод Ньютона, численное интегрирование по прямоугольникам или трапециям.'
+    }
+  ],
+  '11': [
+    {
+      title: 'Искусственный интеллект',
+      body: 'Искусственный интеллект (ИИ) — область компьютерных наук, занимающаяся созданием систем, способных выполнять задачи, требующие интеллекта. Машинное обучение (МО) — подраздел, где алгоритмы обучаются на данных. Типы обучения: с учителем (есть размеченные данные, задача классификации или регрессии), без учителя (данные не размечены, кластеризация, поиск закономерностей), с подкреплением (агент учится взаимодействовать со средой, получая награды). Нейронные сети — математические модели, вдохновлённые работой мозга; состоят из нейронов, объединённых в слои. Применяются в распознавании образов, обработке естественного языка, играх и др.'
+    },
+    {
+      title: 'Информационная безопасность',
+      body: 'Информационная безопасность — защита информации от случайных или преднамеренных воздействий. Основные понятия: угроза (потенциальная возможность нарушения), уязвимость (слабое место), риск (вероятность реализации угрозы с ущербом). Криптография — наука о шифровании. Симметричное шифрование (один ключ для шифрования и расшифровки), асимметричное (открытый и закрытый ключи). Электронная подпись подтверждает авторство и целостность документа. Сетевые экраны (firewalls) контролируют трафик, VPN создают защищённые туннели, бэкапы (резервное копирование) обеспечивают восстановление данных.'
+    },
+    {
+      title: 'Подготовка к ЕГЭ (обзор)',
+      body: 'Систематизация знаний по основным разделам: алгоритмы и программирование (задачи на обработку последовательностей, динамическое программирование, рекурсия), базы данных (SQL-запросы), компьютерные сети (адресация, протоколы), информационная безопасность, основы логики, системы счисления, кодирование информации. Стратегии решения: внимательно читать условие, выделять данные и требования, выбирать подходящий метод (аналитический, переборный, программирование), проверять на тестовых примерах, избегать типичных ошибок (неправильный тип данных, выход за границы массива).'
+    }
+  ]
+};
+
+      const classSelect = document.getElementById('it-class-select');
+      const theorySearch = document.getElementById('it-theory-search');
+      const theoryContainer = document.getElementById('it-theory-container');
+      const legacy = document.getElementById('it-legacy');
+
+      function renderTheory(){
+        if (!classSelect) return;
+        const cls = classSelect.value;
+        const q = (theorySearch.value||'').toLowerCase();
+        const keys = cls==='all' ? Object.keys(theory) : [cls];
+        let items = [];
+        keys.sort((a,b)=>+a-+b).forEach(k=> theory[k].forEach(t=> items.push({ ...t, grade: k })));
+        if (q){ items = items.filter(it => it.title.toLowerCase().includes(q) || it.body.toLowerCase().includes(q)); }
+        if (!items.length){ theoryContainer.innerHTML = '<p class="muted">Ничего не найдено.</p>'; return; }
+        const grouped = items.reduce((acc,it)=>{ (acc[it.grade] ||= []).push(it); return acc; },{});
+        theoryContainer.innerHTML = Object.keys(grouped).sort((a,b)=>+a-+b).map(k=>`
+          <div class="subsection">
+            <h4 class="subsection-title">${k} класс</h4>
+            ${grouped[k].map(it=>`
+              <details ${items.length<=6? 'open':''}>
+                <summary><strong>${it.title}</strong></summary>
+                <div class="prose"><p>${it.body}</p></div>
+              </details>
+            `).join('')}
+          </div>
+        `).join('');
+        if (legacy) legacy.style.display = 'none';
+      }
+
+      if (classSelect){
+        classSelect.addEventListener('change', renderTheory);
+        theorySearch.addEventListener('input', renderTheory);
+        renderTheory();
+      }
+    })();
+
+    // Python IDE
+    let pyodide = null;
+    let isRunning = false;
+    
+    const editor = document.getElementById('codeEditor');
+    const consoleDiv = document.getElementById('console');
+    const consoleContent = document.getElementById('consoleContent');
+    const runBtn = document.getElementById('runBtn');
+    const status = document.getElementById('status');
+    
+    function print(text, className = '') {
+      const span = document.createElement('span');
+      span.textContent = text;
+      if (className) span.className = className;
+      consoleContent.appendChild(span);
+      consoleDiv.scrollTop = consoleDiv.scrollHeight;
+    }
+    
+    function printLine(text, className = '') {
+      const div = document.createElement('div');
+      div.textContent = text;
+      if (className) div.className = className;
+      consoleContent.appendChild(div);
+      consoleDiv.scrollTop = consoleDiv.scrollHeight;
+    }
+    
+    function clearConsole() {
+      consoleContent.innerHTML = '';
+    }
+    
+    async function initPyodide() {
+      try {
+        printLine('Загрузка Python 3.11...');
+        
+        pyodide = await loadPyodide({
+          stdout: (text) => { if(text) print(text); },
+          stderr: (text) => { if(text) print(text, 'error'); }
+        });
+        
+        // Настраиваем input() через prompt
+        pyodide.runPython(`
+import builtins
+from js import prompt as js_prompt
+
+def custom_input(prompt=''):
+    if prompt:
+        result = js_prompt(prompt)
+    else:
+        result = js_prompt("Ввод:")
+    return result if result is not None else ""
+
+builtins.input = custom_input
+        `);
+        
+        status.textContent = '✅ Готов';
+        status.className = 'success';
+        clearConsole();
+        printLine('Python 3.11.0 готов к работе', 'success');
+        printLine('Введите код и нажмите Выполнить', 'info');
+        
+      } catch (err) {
+        status.textContent = '❌ Ошибка';
+        status.className = 'error';
+        printLine('Ошибка загрузки: ' + err.message, 'error');
+      }
+    }
+    
+    function runCode() {
+      if (!pyodide || isRunning) return;
+      
+      const code = editor.value;
+      if (!code.trim()) {
+        printLine('⚠️ Введите код', 'error');
+        return;
+      }
+      
+      isRunning = true;
+      runBtn.disabled = true;
+      status.textContent = '⏳ Выполняется...';
+      
+      printLine('');
+      printLine('═'.repeat(40), 'info');
+      printLine('▶ Запуск программы');
+      printLine('');
+      
+      try {
+        pyodide.runPython(code);
+        printLine('');
+        printLine('✅ Завершено', 'success');
+      } catch (err) {
+        printLine('');
+        printLine('❌ Ошибка:', 'error');
+        let msg = err.message;
+        if (msg.includes('PythonError: ')) msg = msg.replace('PythonError: ', '');
+        printLine(msg, 'error');
+      }
+      
+      printLine('═'.repeat(40), 'info');
+      printLine('');
+      
+      isRunning = false;
+      runBtn.disabled = false;
+      status.textContent = '✅ Готов';
+      consoleDiv.scrollTop = consoleDiv.scrollHeight;
+    }
+    
+    runBtn.addEventListener('click', runCode);
+    
+    document.getElementById('clearCodeBtn').addEventListener('click', () => {
+      if(confirm('Очистить код?')) editor.value = '';
+    });
+    
+    document.getElementById('clearConsoleBtn').addEventListener('click', clearConsole);
+    
+    editor.addEventListener('keydown', (e) => {
+      if (e.key === 'Tab') {
+        e.preventDefault();
+        const start = editor.selectionStart;
+        const end = editor.selectionEnd;
+        editor.value = editor.value.substring(0, start) + '    ' + editor.value.substring(end);
+        editor.selectionStart = editor.selectionEnd = start + 4;
+      }
+      if (e.ctrlKey && e.key === 'Enter') {
+        e.preventDefault();
+        runCode();
+      }
+    });
+    
+    initPyodide();
+  </script>
+  <script src="script (1).js"></script>
+</body>
+</html>

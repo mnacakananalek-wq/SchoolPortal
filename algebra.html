@@ -1,0 +1,995 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Алгебра — Школьный портал</title>
+  <link rel="stylesheet" href="styles (1).css" />
+  <style>
+    .mini-keyboard { display: flex; flex-direction: column; gap: 8px; margin-top: 12px; }
+    .kb-row { display: flex; gap: 6px; flex-wrap: wrap; }
+    .kb-row button { min-width: 40px; padding: 8px 10px; font-size: 14px; }
+    .zoom-controls { display: flex; gap: 6px; margin-bottom: 8px; }
+    .zoom-controls button { padding: 6px 12px; }
+    @media (max-width: 768px) {
+      .tools-row { flex-direction: column; }
+      .tools-row input, .tools-row select, .tools-row button { width: 100%; }
+      #canvas { max-width: 100%; height: auto; }
+      .kb-row button { min-width: 35px; padding: 6px 8px; font-size: 12px; }
+      .mini-keyboard { gap: 6px; margin-top: 8px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="logo" href="./index (1).html">Школьный портал</a>
+      <nav class="nav">
+        <a href="./index (1).html" class="nav-link">Главная</a>
+        <a href="./subjects (1).html" class="nav-link">Учебные материалы</a>
+        <a href="./contact (1).html" class="nav-link">Связь</a>
+      </nav>
+      <button class="mobile-menu-btn" id="mobileMenuBtn" title="Меню">☰</button>
+      <div class="mobile-dropdown" id="mobileDropdown">
+        <a href="./index (1).html" class="nav-link">Главная</a>
+        <a href="./subjects (1).html" class="nav-link">Учебные материалы</a>
+        <a href="./contact (1).html" class="nav-link">Связь</a>
+      </div>
+      <button class="theme-toggle" data-toggle-theme title="Переключить тему">
+        <span class="toggle-slider"></span>
+      </button>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="breadcrumbs">
+      <a class="link" href="subjects (1).html">← Назад к предметам</a>
+      <span style="color: var(--muted);"> / Алгебра</span>
+    </div>
+    <h1 class="section-title">Алгебра</h1>
+
+    <div data-tabs>
+      <div class="tabs">
+        <button class="tab active" data-tab="theory">Теория</button>
+        <button class="tab" data-tab="interactive">Интерактивная часть</button>
+      </div>
+      <div class="tabpanes">
+        <section class="active" data-pane="theory">
+          <div class="card">
+            <h3 class="card-title">📚 Теория по алгебре</h3>
+            <div class="tools-row" style="gap:8px; flex-wrap: wrap;">
+              <label for="class-select" class="sr-only">Выбор класса</label>
+              <select id="class-select" class="input" style="max-width: 260px;">
+                <option value="all">Вся теория</option>
+                <option value="5">5 класс</option>
+                <option value="6">6 класс</option>
+                <option value="7">7 класс</option>
+                <option value="8">8 класс</option>
+                <option value="9">9 класс</option>
+                <option value="10">10 класс</option>
+                <option value="11">11 класс</option>
+              </select>
+              <input id="theory-search" class="input" placeholder="Поиск по теории" />
+            </div>
+            <div id="theory-container" class="card-text"></div>
+          </div>
+        </section>
+
+        <section data-pane="interactive">
+          <div class="card">
+            <h3 class="card-title">🧮 Решение уравнений и неравенств (пошагово)</h3>
+            <p class="card-text">Введите левую часть, выберите знак и введите правую часть.</p>
+
+            <div class="tools-row">
+              <input class="input" id="leftPart" placeholder="Левая часть" style="flex: 1;" />
+              <select class="input" id="signSelect" style="width: auto;">
+                <option value="=">=</option>
+                <option value=">">></option>
+                <option value="<"><</option>
+                <option value=">=">>=</option>
+                <option value="<="><=</option>
+              </select>
+              <input class="input" id="rightPart" placeholder="Правая часть" style="flex: 1;" />
+              <button class="btn btn-primary" id="startSolve">Решить</button>
+              <button class="btn btn-ghost" id="reset">Сброс</button>
+              <button class="btn btn-ghost" id="toggleKeyboard" title="Показать/скрыть клавиатуру">⌨</button>
+            </div>
+
+            <!-- Мини-клавиатура (упорядоченная) -->
+            <div id="keyboardContainer" class="mini-keyboard">
+              <div class="kb-row">
+                <button class="btn btn-ghost" data-insert="7">7</button>
+                <button class="btn btn-ghost" data-insert="8">8</button>
+                <button class="btn btn-ghost" data-insert="9">9</button>
+                <button class="btn btn-ghost" data-insert="(">(</button>
+                <button class="btn btn-ghost" data-insert=")">)</button>
+                <button class="btn btn-ghost" data-insert="|">| |</button>
+                <button class="btn btn-ghost" data-insert="/">÷</button>
+                <button class="btn btn-ghost" data-insert="*">×</button>
+              </div>
+
+              <div class="kb-row">
+                <button class="btn btn-ghost" data-insert="4">4</button>
+                <button class="btn btn-ghost" data-insert="5">5</button>
+                <button class="btn btn-ghost" data-insert="6">6</button>
+                <button class="btn btn-ghost" data-insert="-">−</button>
+                <button class="btn btn-ghost" data-insert="+">+</button>
+                <button class="btn btn-ghost" data-action="pow">x^</button>
+                <button class="btn btn-ghost" data-action="sqrt">√</button>
+                <button class="btn btn-ghost" data-insert="%">%</button>
+              </div>
+
+              <div class="kb-row">
+                <button class="btn btn-ghost" data-insert="1">1</button>
+                <button class="btn btn-ghost" data-insert="2">2</button>
+                <button class="btn btn-ghost" data-insert="3">3</button>
+                <button class="btn btn-ghost" data-insert=".">.</button>
+                <button class="btn btn-ghost" data-insert=",">,</button>
+                <button class="btn btn-ghost" data-action="frac">a/b</button>
+                <button class="btn btn-ghost" data-insert="x">x</button>
+                <button class="btn btn-ghost" data-insert="pi">π</button>
+              </div>
+
+              <div class="kb-row">
+                <button class="btn btn-ghost" data-insert="0">0</button>
+                <button class="btn" data-action="backspace">⌫</button>
+                <button class="btn" data-action="clear">C</button>
+              </div>
+            </div>
+
+            <div id="progress" class="notice" style="margin-top: 12px;"></div>
+            <div id="stepArea" style="margin-top: 10px; display: none;">
+              <div id="explanation" class="notice" style="margin-top: 8px;"></div>
+              <div id="nextStepBtn" style="margin-top: 8px;"></div>
+            </div>
+
+            <div id="graphArea" style="margin-top: 14px; display: none;">
+              <h4>График решения:</h4>
+              <div class="zoom-controls">
+                <button class="btn btn-ghost" id="zoomOut" title="Уменьшить">−</button>
+                <button class="btn btn-ghost" id="zoomIn" title="Увеличить">+</button>
+                <button class="btn btn-ghost" id="resetZoom" title="Сбросить масштаб">⟲</button>
+              </div>
+              <canvas id="graphCanvas" style="width: 100%; height: 400px; border: 1px solid var(--border); background: white; cursor: grab; display: block;"></canvas>
+              <div id="solutionExplanation" class="notice" style="margin-top: 8px;"></div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p>© 2026 Школьный портал</p>
+      <a class="link" href="contact (1).html">Связаться с нами</a>
+    </div>
+  </footer>
+
+  <script src="./script (1).js"></script>
+  <script>
+    const theory = {
+  '5': [
+    {
+      title: 'Натуральные числа',
+      body: 'Натуральные числа — это числа, возникающие естественным образом при счёте: 1, 2, 3, 4, 5 и так далее. Множество натуральных чисел бесконечно. Основные операции: сложение, вычитание, умножение, деление. Натуральные числа используются для обозначения количества предметов, порядковых номеров и нумерации. Число 1 — наименьшее натуральное число. Нуль не является натуральным числом (в классическом определении).'
+    },
+    {
+      title: 'Обыкновенные дроби',
+      body: 'Обыкновенная дробь — это число, состоящее из одной или нескольких долей единицы. Записывается как a/b, где a — числитель (сколько частей взяли), b — знаменатель (на сколько частей разделили единицу). Правильная дробь: числитель меньше знаменателя (меньше 1). Неправильная дробь: числитель больше или равен знаменателю (больше или равна 1). Смешанное число — сумма целого числа и правильной дроби. Основное свойство: числитель и знаменатель можно умножать или делить на одно и то же число — значение дроби не изменится.'
+    },
+    {
+      title: 'Десятичные дроби и проценты',
+      body: 'Десятичная дробь — это форма записи обыкновенной дроби со знаменателем 10, 100, 1000 и т.д. Целая часть отделяется от дробной запятой (например, 3,14). Каждый разряд после запятой в 10 раз меньше предыдущего: десятые, сотые, тысячные. Перевод: обыкновенную дробь с знаменателем 10ⁿ можно записать как десятичную с n цифрами после запятой. Процент — это сотая часть числа (1% = 0,01 = 1/100). Чтобы найти p% от числа, умножаем число на p и делим на 100. Чтобы найти число по его p%, умножаем известное значение на 100 и делим на p.'
+    },
+    {
+      title: 'Выражения и уравнения',
+      body: 'Числовое выражение — запись из чисел и знаков действий (например, 5 + 3 × 2). Алгебраическое выражение — запись из чисел, букв и знаков действий (например, 2a + 3b). Значение выражения — число, полученное после вычислений. Упрощение выражений: раскрытие скобок, приведение подобных слагаемых. Уравнение — равенство, содержащее неизвестное число (переменную), обозначаемую буквой. Корень уравнения — значение переменной, при котором равенство верно. Решить уравнение — значит найти все его корни или доказать, что их нет. Линейное уравнение: ax + b = 0, где a ≠ 0, имеет один корень x = -b/a.'
+    }
+  ],
+  '6': [
+    {
+      title: 'Отрицательные числа',
+      body: 'Отрицательные числа — это числа, меньшие нуля, записываемые со знаком «минус»: -1, -2, -3 и т.д. Положительные числа больше нуля. Нуль не является ни положительным, ни отрицательным. Модуль числа |a| — расстояние от числа до нуля на числовой прямой: |5| = 5, |-5| = 5. Сравнение: любое отрицательное число меньше любого положительного. Из двух отрицательных чисел больше то, у которого модуль меньше. Сложение: числа с одинаковыми знаками — складываем модули, ставим общий знак; разные знаки — вычитаем меньший модуль из большего, ставим знак числа с большим модулем.'
+    },
+    {
+      title: 'Делимость',
+      body: 'Делимость — свойство одного целого числа делиться на другое без остатка. Если a делится на b, то b — делитель a, а a — кратное b. Признаки делимости: на 2 — последняя цифра чётная; на 3 — сумма цифр делится на 3; на 5 — последняя цифра 0 или 5; на 9 — сумма цифр делится на 9; на 10 — последняя цифра 0. Простое число — натуральное число, имеющее ровно два делителя: 1 и само себя (2, 3, 5, 7, 11...). Составное число — имеет более двух делителей. НОД (наибольший общий делитель) — наибольшее число, на которое делятся оба числа. НОК (наименьшее общее кратное) — наименьшее число, которое делится на оба числа.'
+    },
+    {
+      title: 'Отношения и пропорции',
+      body: 'Отношение двух чисел a и b — это частное a:b или a/b, показывает, во сколько раз a больше b или какую часть a составляет от b. Пропорция — равенство двух отношений: a/b = c/d или a:b = c:d. Члены пропорции: a и d — крайние, b и c — средние. Основное свойство: произведение крайних членов равно произведению средних (ad = bc). Прямая пропорциональность: y = kx, при увеличении x в n раз y увеличивается в n раз. Обратная пропорциональность: y = k/x, при увеличении x в n раз y уменьшается в n раз. Масштаб — отношение расстояния на карте к расстоянию в реальности.'
+    },
+    {
+      title: 'Координаты',
+      body: 'Координата точки на прямой — число, показывающее положение точки относительно начала отсчёта (точки 0). Числовая прямая (координатная ось) — прямая с выбранным началом отсчёта, единичным отрезком и направлением. Координатная плоскость — плоскость с двумя перпендикулярными осями: Ox (абсцисс, горизонтальная) и Oy (ординат, вертикальная). Точка пересечения — начало координат O(0;0). Координаты точки M(x;y): x — абсцисса (расстояние до оси Oy), y — ордината (расстояние до оси Ox). Плоскость делится осями на четыре четверти (квадранта). Расстояние между точками A(x₁;y₁) и B(x₂;y₂): d = √((x₂-x₁)² + (y₂-y₁)²).'
+    }
+  ],
+  '7': [
+    {
+      title: 'Линейные уравнения',
+      body: 'Линейное уравнение с одной переменной — уравнение вида ax + b = 0, где a и b — числа, x — переменная, a ≠ 0. Имеет единственное решение x = -b/a. Уравнение вида ax = b: если a ≠ 0 — один корень x = b/a; если a = 0 и b = 0 — бесконечно много корней (любое число); если a = 0 и b ≠ 0 — нет корней. Решение: переносим слагаемые с x в левую часть, числа — в правую, при переносе меняем знаки. Приведение к виду ax = b. Решение линейных уравнений с модулями: раскрываем модуль по определению, рассматриваем случаи. Линейное уравнение с двумя переменными: ax + by = c, решений бесконечно много, геометрически — прямая.'
+    },
+    {
+      title: 'Системы уравнений',
+      body: 'Система линейных уравнений — два или более уравнений с одними и теми же переменными. Решение системы — пара значений (x;y), обращающая все уравнения в верные равенства. Метод подстановки: выражаем одну переменную из одного уравнения, подставляем в другое, решаем, находим вторую переменную. Метод сложения: умножаем уравнения на числа, чтобы коэффициенты при одной переменной стали противоположными, складываем уравнения, одна переменная исключается, решаем, подставляем. Графический метод: строим графики обоих уравнений, точка пересечения — решение. Система может иметь одно решение (прямые пересекаются), бесконечно много (прямые совпадают) или не иметь решений (прямые параллельны).'
+    },
+    {
+      title: 'Одночлены и многочлены',
+      body: 'Одночлен — произведение чисел, переменных и их степеней (например, 3x²y³). Числовой множитель — коэффициент. Степень одночлена — сумма степеней всех переменных (для 3x²y³ степень 5). Подобные одночлены — одночлены с одинаковым набором переменных в одинаковых степенях (2x²y и 5x²y). Приведение подобных: складываем коэффициенты, переменные не меняем. Многочлен — алгебраическая сумма одночленов (например, 2x² + 3xy - 5). Члены многочлена — отдельные одночлены. Степень многочлена — наибольшая степень его членов. Стандартный вид — многочлен, приведённый к сумме одночленов стандартного вида без подобных слагаемых. Действия: сложение, вычитание, умножение одночлена на многочлен, умножение многочленов.'
+    },
+    {
+      title: 'Функции',
+      body: 'Функция — правило (закон), по которому каждому значению независимой переменной x (аргумента) ставится в соответствие единственное значение зависимой переменной y. Обозначение: y = f(x). Область определения — все допустимые значения x. Область значений — все получаемые значения y. Линейная функция: y = kx + b, где k и b — числа. График — прямая. k — угловой коэффициент (тангенс угла наклона), b — ордината точки пересечения с осью Oy. При k > 0 функция возрастает, при k < 0 — убывает. Прямая пропорциональность: y = kx (частный случай, b = 0), график проходит через начало координат. Постоянная функция: y = b (частный случай, k = 0), график — горизонтальная прямая.'
+    }
+  ],
+  '8': [
+    {
+      title: 'Квадратные уравнения',
+      body: 'Квадратное уравнение — уравнение вида ax² + bx + c = 0, где a, b, c — числа, a ≠ 0. a — первый (старший) коэффициент, b — второй коэффициент, c — свободный член. Неполные квадратные уравнения: при b = 0: ax² + c = 0, x² = -c/a; при c = 0: ax² + bx = 0, x(ax + b) = 0; при b = 0 и c = 0: ax² = 0, x = 0. Дискриминант D = b² - 4ac определяет количество корней: D > 0 — два различных корня x = (-b ± √D)/(2a); D = 0 — один корень (два совпадающих) x = -b/(2a); D < 0 — нет действительных корней. Теорема Виета: для x² + px + q = 0 сумма корней x₁ + x₂ = -p, произведение x₁ · x₂ = q. Разложение квадратного трёхчлена: ax² + bx + c = a(x - x₁)(x - x₂).'
+    },
+    {
+      title: 'Неравенства',
+      body: 'Числовое неравенство — запись вида a > b (a больше b), a < b (a меньше b), a ≥ b (a больше или равно b), a ≤ b (а меньше или равно b). Свойства: если a > b, то b < a; если a > b и b > c, то a > c; если a > b, то a + c > b + c; если a > b и c > 0, то ac > bc; если a > b и c < 0, то ac < bc (знак меняется!). Линейное неравенство с одной переменной: ax > b, ax < b, ax ≥ b, ax ≤ b. Решение — множество значений x, при которых неравенство верно. Изображается на числовой прямой: строгий знак (> или <) — выколотая точка, нестрогий (≥ или ≤) — закрашенная точка. Система неравенств — несколько неравенств с одной переменной. Решение — пересечение решений всех неравенств.'
+    },
+    {
+      title: 'Квадратичная функция',
+      body: 'Квадратичная функция — функция вида y = ax² + bx + c, где a, b, c — числа, a ≠ 0. График — парабола. При a > 0 ветви направлены вверх, при a < 0 — вниз. Ось симметрии — вертикальная прямая x = -b/(2a). Вершина параболы — точка с координатами x₀ = -b/(2a), y₀ = ax₀² + bx₀ + c = -D/(4a). При a > 0 вершина — точка минимума, при a < 0 — точка максимума. Нули функции — корни уравнения ax² + bx + c = 0. Если D > 0 — два нуля, парабола пересекает ось Ox в двух точках. Если D = 0 — один нуль, парабола касается оси Ox. Если D < 0 — нет нулей, парабола не пересекает ось Ox. Свойства: при a > 0 функция убывает на (-∞; x₀], возрастает на [x₀; +∞); при a < 0 — наоборот.'
+    },
+    {
+      title: 'Степени с целым показателем',
+      body: 'Степень с натуральным показателем n: aⁿ = a·a·...·a (n раз), a — основание, n — показатель. Степень с нулевым показателем: a⁰ = 1, где a ≠ 0. Степень с отрицательным целым показателем: a⁻ⁿ = 1/aⁿ, где a ≠ 0. Свойства степеней с целыми показателями: aᵐ·aⁿ = aᵐ⁺ⁿ; aᵐ/aⁿ = aᵐ⁻ⁿ; (aᵐ)ⁿ = aᵐⁿ; (ab)ⁿ = aⁿbⁿ; (a/b)ⁿ = aⁿ/bⁿ. Стандартный вид числа: a × 10ⁿ, где 1 ≤ a < 10, n — целое число. Применяется для очень больших и очень малых чисел. Примеры: 3500000 = 3,5 × 10⁶; 0,0000042 = 4,2 × 10⁻⁶. При сложении и вычитании чисел в стандартном виде показатели степени должны быть одинаковыми.'
+    }
+  ],
+  '9': [
+    {
+      title: 'Степени и корни',
+      body: 'Арифметический корень n-й степени из числа a (a ≥ 0) — неотрицательное число, n-я степень которого равна a: ⁿ√a = b, если bⁿ = a и b ≥ 0. При чётном n корень из отрицательного числа не существует в действительных числах. При нечётном n корень существует для любого a. Свойства: ⁿ√(ab) = ⁿ√a · ⁿ√b; ⁿ√(a/b) = ⁿ√a / ⁿ√b; ᵐ√(ⁿ√a) = ᵐⁿ√a; (ⁿ√a)ᵐ = ⁿ√(aᵐ). Степень с рациональным показателем: a^(m/n) = ⁿ√(aᵐ) = (ⁿ√a)ᵐ, где a > 0, m — целое, n — натуральное. Свойства степеней с рациональными показателями такие же, как с целыми. Преобразование выражений с корнями: внесение множителя под знак корня, вынесение множителя из-под знака корня, упрощение, рационализация знаменателя.'
+    },
+    {
+      title: 'Прогрессии',
+      body: 'Числовая последовательность — функция натурального аргумента: a₁, a₂, a₃, ..., aₙ, ... Арифметическая прогрессия — последовательность, где каждый член, начиная со второго, равен предыдущему, сложенному с одним и тем же числом d (разностью): aₙ₊₁ = aₙ + d. Формула n-го члена: aₙ = a₁ + d(n-1). Сумма первых n членов: Sₙ = (a₁ + aₙ)n/2 = (2a₁ + d(n-1))n/2. Геометрическая прогрессия — последовательность ненулевых чисел, где каждый член, начиная со второго, равен предыдущему, умноженному на одно и то же число q (знаменатель): bₙ₊₁ = bₙ · q. Формула n-го члена: bₙ = b₁ · q^(n-1). Сумма первых n членов: Sₙ = b₁(qⁿ - 1)/(q - 1) при q ≠ 1. Сумма бесконечно убывающей прогрессии (|q| < 1): S = b₁/(1 - q).'
+    },
+    {
+      title: 'Элементы статистики',
+      body: 'Статистика — раздел математики о сборе, обработке и анализе данных. Генеральная совокупность — все объекты исследования. Выборка — часть совокупности, по которой судят о всей совокупности. Варианта — отдельное значение признака. Частота — количество появлений варианты. Относительная частота — частота, делённая на объём выборки. Ряд распределения — таблица вариант и их частот. Среднее арифметическое: x̄ = (x₁ + x₂ + ... + xₙ)/n. Мода (Mo) — значение, встречающееся чаще всего. Медиана (Me) — среднее значение в упорядоченном ряду (при чётном n — среднее двух центральных). Размах — разность между наибольшим и наименьшим значениями. Дисперсия — средний квадрат отклонений от среднего: D = ((x₁-x̄)² + ... + (xₙ-x̄)²)/n. Среднее квадратическое отклонение: σ = √D.'
+    },
+    {
+      title: 'Системы уравнений (нелинейные)',
+      body: 'Система нелинейных уравнений — система, где хотя бы одно уравнение нелинейное (содержит степени выше 1, произведения переменных, корни и т.д.). Метод подстановки: выражаем одну переменную из линейного уравнения, подставляем в нелинейное, решаем. Метод сложения: комбинируем уравнения для исключения переменной. Метод введения новых переменных: замена u = f(x,y), v = g(x,y) для упрощения. Графический метод: строим графики, ищем точки пересечения. Системы с двумя квадратными уравнениями: могут иметь до 4 решений. Системы с уравнением окружности и прямой: от 0 до 2 решений (зависит от взаимного расположения). Симметричные системы: замена u = x + y, v = xy часто упрощает решение.'
+    }
+  ],
+  '10': [
+    {
+      title: 'Тригонометрия',
+      body: 'Тригонометрические функции угла в прямоугольном треугольнике: sin α = противолежащий катет / гипотенуза; cos α = прилежащий катет / гипотенуза; tg α = противолежащий / прилежащий = sin α / cos α; ctg α = прилежащий / противолежащий = cos α / sin α. Основное тригонометрическое тождество: sin² α + cos² α = 1. Радианная мера угла: 180° = π радиан, 1° = π/180 рад, 1 рад ≈ 57,3°. Тригонометрический круг — окружность радиуса 1 с центром в начале координат. Точки на окружности: (cos α; sin α). Знаки функций по четвертям: I(+,+), II(-,+), III(-,-), IV(+,-). Формулы приведения позволяют свести тригонометрические функции любого угла к функциям острого угла. Формулы сложения: sin(α±β), cos(α±β), tg(α±β). Формулы двойного угла, понижения степени, преобразования сумм в произведения.'
+    },
+    {
+      title: 'Логарифмы',
+      body: 'Логарифм числа b по основанию a (a > 0, a ≠ 1, b > 0) — показатель степени, в которую нужно возвести a, чтобы получить b: logₐ b = c ⇔ a^c = b. Основное логарифмическое тождество: a^(logₐ b) = b. Десятичный логарифм (lg) — по основанию 10. Натуральный логарифм (ln) — по основанию e ≈ 2,718... Свойства: logₐ 1 = 0; logₐ a = 1; logₐ(bc) = logₐ b + logₐ c; logₐ(b/c) = logₐ b - logₐ c; logₐ(b^c) = c·logₐ b. Формула перехода к другому основанию: logₐ b = log_c b / log_c a. logₐ b = 1 / log_b a. Логарифмирование и потенцирование: переход от уравнения f(x) = g(x) к logₐ f(x) = logₐ g(x) при f(x) > 0, g(x) > 0. Решение логарифмических уравнений: приведение к одному основанию, замена переменной, использование свойств.'
+    },
+    {
+      title: 'Показательные и логарифмические функции',
+      body: 'Показательная функция: y = aˣ, где a > 0, a ≠ 1. Область определения — все действительные числа. Область значений — положительные числа. При a > 1 функция возрастает, график проходит через (0;1) и (1;a). При 0 < a < 1 функция убывает. Логарифмическая функция: y = logₐ x, где a > 0, a ≠ 1. Область определения — положительные числа. Область значений — все действительные числа. При a > 1 функция возрастает, график проходит через (1;0) и (a;1). При 0 < a < 1 функция убывает. Функции y = aˣ и y = logₐ x взаимно обратны, их графики симметричны относительно прямой y = x. Показательные уравнения: a^f(x) = a^g(x) ⇔ f(x) = g(x). Логарифмические уравнения: logₐ f(x) = logₐ g(x) ⇔ f(x) = g(x) при f(x) > 0, g(x) > 0. Неравенства: при a > 1 знак сохраняется, при 0 < a < 1 — меняется.'
+    },
+    {
+      title: 'Производная',
+      body: 'Производная функции f в точке x — предел отношения приращения функции к приращению аргумента при стремлении приращения аргумента к нулю: f\'(x) = lim(Δx→0) [f(x+Δx) - f(x)]/Δx. Геометрический смысл: производная равна угловому коэффициенту (тангенсу угла наклона) касательной к графику функции в данной точке. Физический смысл: если s(t) — путь, то s\'(t) — скорость; если v(t) — скорость, то v\'(t) — ускорение. Правила дифференцирования: (cu)\' = cu\'; (u ± v)\' = u\' ± v\'; (uv)\' = u\'v + uv\'; (u/v)\' = (u\'v - uv\')/v². Таблица производных: C\' = 0; x\' = 1; (xⁿ)\' = nxⁿ⁻¹; (sin x)\' = cos x; (cos x)\' = -sin x; (tg x)\' = 1/cos²x; (eˣ)\' = eˣ; (aˣ)\' = aˣ ln a; (ln x)\' = 1/x; (logₐ x)\' = 1/(x ln a).'
+    }
+  ],
+  '11': [
+    {
+      title: 'Интегралы',
+      body: 'Первообразная функции f на интервале — функция F, производная которой равна f: F\'(x) = f(x). Неопределённый интеграл — множество всех первообразных: ∫f(x)dx = F(x) + C, где C — произвольная постоянная. Свойства: ∫(f ± g)dx = ∫f dx ± ∫g dx; ∫kf dx = k∫f dx. Таблица интегралов: ∫xⁿ dx = xⁿ⁺¹/(n+1) + C (n ≠ -1); ∫1/x dx = ln|x| + C; ∫eˣ dx = eˣ + C; ∫aˣ dx = aˣ/ln a + C; ∫sin x dx = -cos x + C; ∫cos x dx = sin x + C. Методы интегрирования: непосредственное (по таблице), замена переменной, интегрирование по частям: ∫u dv = uv - ∫v du. Определённый интеграл: ∫[a,b] f(x)dx = F(b) - F(a). Геометрический смысл: площадь криволинейной трапеции под графиком f(x) над [a,b].'
+    },
+    {
+      title: 'Комплексные числа',
+      body: 'Комплексное число — число вида z = a + bi, где a и b — действительные числа, i — мнимая единица (i² = -1). a — действительная часть (Re z), b — мнимая часть (Im z). Действительные числа — частный случай при b = 0. Чисто мнимые — при a = 0. Равенство: a + bi = c + di ⇔ a = c и b = d. Модуль: |z| = √(a² + b²). Сопряжённое число: z̄ = a - bi. Алгебраические действия: сложение (a+bi) + (c+di) = (a+c) + (b+d)i; вычитание — аналогично; умножение — раскрытие скобок с учётом i² = -1; деление — домножение числителя и знаменателя на сопряжённое. Тригонометрическая форма: z = r(cos φ + i sin φ), где r = |z|, φ — аргумент (угол). Формула Муавра: zⁿ = rⁿ(cos nφ + i sin nφ). Извлечение корня n-й степени даёт n различных корней.'
+    },
+    {
+      title: 'Элементы комбинаторики',
+      body: 'Комбинаторика — раздел математики о подсчёте количества комбинаций. Основное правило комбинаторики: если объект A можно выбрать m способами, а объект B — n способами, то пару (A,B) можно выбрать m·n способами. Перестановки — упорядоченные наборы из n элементов, отличающиеся порядком: Pₙ = n! = 1·2·...·n (n факториал). Размещения — упорядоченные наборы из k элементов, выбранных из n: Aₙᵏ = n!/(n-k)!. Сочетания — неупорядоченные наборы из k элементов из n, отличаются только составом: Cₙᵏ = n!/(k!(n-k)!) = Aₙᵏ/k!. Свойства сочетаний: Cₙ⁰ = Cₙⁿ = 1; Cₙᵏ = Cₙⁿ⁻ᵏ; Cₙᵏ + Cₙᵏ⁺¹ = Cₙ₊₁ᵏ⁺¹ (треугольник Паскаля). Бином Ньютона: (a + b)ⁿ = Σ Cₙᵏ aⁿ⁻ᵏbᵏ (сумма по k от 0 до n).'
+    },
+    {
+      title: 'Теория вероятностей',
+      body: 'Случайный эксперимент — эксперимент, исход которого нельзя предсказать заранее. Исход (элементарное событие) — один из возможных результатов. Пространство элементарных исходов Ω — множество всех возможных исходов. Событие — подмножество Ω. Достоверное событие — всегда происходит (Ω). Невозможное событие — никогда не происходит (∅). Противоположное событие Ā — не происходит A. Совместные события — могут произойти одновременно. Несовместные — не могут. Классическое определение вероятности: P(A) = m/n, где m — число благоприятных исходов, n — число всех равновозможных исходов. Свойства: 0 ≤ P(A) ≤ 1; P(Ω) = 1; P(∅) = 0; P(Ā) = 1 - P(A). Сложение вероятностей: P(A ∪ B) = P(A) + P(B) - P(A ∩ B); для несовместных: P(A ∪ B) = P(A) + P(B). Умножение: P(A ∩ B) = P(A)·P(B|A) — условная вероятность; для независимых: P(A ∩ B) = P(A)·P(B).'
+    }
+  ]
+};
+    const classSelect = document.getElementById('class-select');
+    const theorySearch = document.getElementById('theory-search');
+    const theoryContainer = document.getElementById('theory-container');
+
+    function renderTheory() {
+      const cls = classSelect.value;
+      const query = (theorySearch.value || '').toLowerCase();
+      const keys = cls === 'all' ? Object.keys(theory) : [cls];
+      let items = [];
+      keys.forEach(k => {
+        theory[k].forEach(t => items.push({ ...t, grade: k }));
+      });
+      if (query) {
+        items = items.filter(it => it.title.toLowerCase().includes(query) || it.body.toLowerCase().includes(query));
+      }
+      if (!items.length) {
+        theoryContainer.innerHTML = '<p class="muted">Ничего не найд��но.</p>';
+        return;
+      }
+      const grouped = items.reduce((acc, it) => {
+        (acc[it.grade] ||= []).push(it);
+        return acc;
+      }, {});
+      theoryContainer.innerHTML = Object.keys(grouped).sort((a,b)=>+a-+b).map(k => `
+        <div class="subsection">
+          <h4 class="subsection-title">${k === 'all' ? 'Вся теория' : k + ' класс'}</h4>
+          ${grouped[k].map((it) => `
+            <details>
+              <summary><strong>${it.title}</strong></summary>
+              <div class="prose"><p>${it.body}</p></div>
+            </details>
+          `).join('')}
+        </div>
+      `).join('');
+    }
+
+    classSelect.addEventListener('change', renderTheory);
+    theorySearch.addEventListener('input', renderTheory);
+    renderTheory();
+
+    const leftPart = document.getElementById('leftPart');
+    const rightPart = document.getElementById('rightPart');
+    const signSelect = document.getElementById('signSelect');
+    const startSolve = document.getElementById('startSolve');
+    const resetBtn = document.getElementById('reset');
+    const progress = document.getElementById('progress');
+    const explanation = document.getElementById('explanation');
+    const nextStepBtn = document.getElementById('nextStepBtn');
+    const graphArea = document.getElementById('graphArea');
+    const graphCanvas = document.getElementById('graphCanvas');
+    const solutionExplanation = document.getElementById('solutionExplanation');
+    const stepArea = document.getElementById('stepArea');
+
+    let solutionSteps = [];
+    let currentStep = 0;
+    let currentEquation = null;
+    let graphZoom = 1;
+    let graphOffsetX = 0, graphOffsetY = 0; // For panning
+
+    (function initKeyboard() {
+      const kb = document.querySelector('.mini-keyboard');
+      let activeEl = leftPart;
+      leftPart.addEventListener('focus', () => activeEl = leftPart);
+      rightPart.addEventListener('focus', () => activeEl = rightPart);
+
+      function insertText(text) {
+        const start = activeEl.selectionStart || 0;
+        const end = activeEl.selectionEnd || 0;
+        const before = activeEl.value.slice(0, start);
+        const after = activeEl.value.slice(end);
+        activeEl.value = before + text + after;
+        activeEl.focus();
+        activeEl.setSelectionRange(start + text.length, start + text.length);
+      }
+
+      function wrapText(prefix, suffix) {
+        const start = activeEl.selectionStart || 0;
+        const end = activeEl.selectionEnd || 0;
+        const before = activeEl.value.slice(0, start);
+        const sel = activeEl.value.slice(start, end) || '';
+        const after = activeEl.value.slice(end);
+        activeEl.value = before + prefix + sel + suffix + after;
+        activeEl.focus();
+        const pos = start + prefix.length + sel.length;
+        activeEl.setSelectionRange(pos, pos);
+      }
+
+      kb.addEventListener('click', (e) => {
+        const btn = e.target.closest('button');
+        if (!btn) return;
+
+        const action = btn.dataset.action;
+        const insert = btn.dataset.insert;
+
+        if (action === 'pow') {
+          insertText('^');
+        } else if (action === 'sqrt') {
+          wrapText('sqrt(', ')');
+        } else if (action === 'frac') {
+          wrapText('(', ')/()');
+          const pos = activeEl.selectionStart - 3;
+          activeEl.setSelectionRange(pos, pos);
+        } else if (action === 'backspace') {
+          const start = activeEl.selectionStart || 0;
+          const end = activeEl.selectionEnd || 0;
+          if (start !== end) {
+            activeEl.value = activeEl.value.slice(0, start) + activeEl.value.slice(end);
+            activeEl.setSelectionRange(start, start);
+          } else if (start > 0) {
+            activeEl.value = activeEl.value.slice(0, start - 1) + activeEl.value.slice(start);
+            activeEl.setSelectionRange(start - 1, start - 1);
+          }
+        } else if (action === 'clear') {
+          activeEl.value = '';
+        } else if (insert) {
+          insertText(insert);
+        }
+        activeEl.focus();
+      });
+    })();
+
+    function normalizeExpr(expr) {
+      if (/[А-Яа-яЁё]/.test(expr)) {
+        throw new Error('СИНТАКСИЧЕСКАЯ ОШИБКА: найдены неанглийские буквы');
+      }
+      
+      let s = String(expr || '0').replace(/\s+/g, '').replace(/−/g, '-');
+      s = s.replace(/×/g, '*').replace(/÷/g, '/').replace(/π/g, 'Math.PI').replace(/√/g, 'Math.sqrt');
+      s = s.replace(/,/g, '.');
+      s = s.replace(/(\d+(?:\.\d+)?)%/g, '($1/100)');
+      s = s.replace(/x²/g, 'x**2').replace(/х²/g, 'x**2');
+      s = s.replace(/\^/g, '**');
+      s = s.replace(/(\d)(x|Math\.PI|\()/g, '$1*$2');
+      s = s.replace(/(x|Math\.PI|\))(\d)/g, '$1*$2');
+      return s;
+    }
+
+    function evalExpr(expr, x = 0) {
+      try {
+        const js = normalizeExpr(expr);
+        return Function('x', 'return (' + js + ')')(x);
+      } catch (e) {
+        throw new Error('НЕТ РЕШЕНИЙ (ИЛИ НЕВЕРНО)');
+      }
+    }
+
+    function gcd(a, b) {
+      a = Math.abs(Math.round(a));
+      b = Math.abs(Math.round(b));
+      while (b) { const t = b; b = a % b; a = t; }
+      return a;
+    }
+
+    function formatNum(n) {
+      if (Math.abs(n) < 1e-10) return '0';
+      if (Math.abs(n - Math.round(n)) < 1e-10) return String(Math.round(n));
+      return parseFloat(n.toFixed(6)).toString();
+    }
+
+    function toFraction(x, maxDen = 10000) {
+      let a = Math.floor(x), h1 = 1, k1 = 0, h = a, k = 1, x1 = x;
+      while (Math.abs(x - h / k) > 1e-10 && k < maxDen) {
+        x1 = 1 / (x1 - a);
+        a = Math.floor(x1);
+        const h2 = h1; h1 = h; h = a * h1 + h2;
+        const k2 = k1; k1 = k; k = a * k1 + k2;
+      }
+      const g = gcd(h, k);
+      return [h / g, k / g];
+    }
+
+    function toPeriodic(num, den) {
+      num = Math.abs(Math.round(num));
+      den = Math.abs(Math.round(den));
+      const intPart = Math.floor(num / den);
+      let rem = num % den;
+      let frac = '';
+      const seen = {};
+      let idx = 0, cycle = -1;
+      while (rem && idx < 100) {
+        if (seen[rem] !== undefined) { cycle = seen[rem]; break; }
+        seen[rem] = idx;
+        rem *= 10;
+        frac += Math.floor(rem / den);
+        rem %= den;
+        idx++;
+      }
+      if (cycle === -1) return { intPart, nonRep: frac, period: '' };
+      return { intPart, nonRep: frac.slice(0, cycle), period: frac.slice(cycle) };
+    }
+
+    function formatAnswer(x) {
+      if (!isFinite(x)) return String(x);
+      if (Math.abs(x - Math.round(x)) < 1e-10) return String(Math.round(x));
+      const [n, d] = toFraction(x);
+      const per = toPeriodic(n, d);
+      if (per.period) {
+        const dec = `${per.intPart}${per.nonRep ? '.' + per.nonRep : ''}(${per.period})`;
+        return `${n}/${d} (${dec})`;
+      }
+      return formatNum(x);
+    }
+
+    function solveEquation() {
+      const rawL = leftPart.value.trim() || '0';
+      const rawR = rightPart.value.trim() || '0';
+      const sign = signSelect.value;
+
+      try {
+        const leftExpr = normalizeExpr(rawL);
+        const rightExpr = normalizeExpr(rawR);
+
+        solutionSteps = [];
+        currentStep = 0;
+        stepArea.style.display = 'block';
+        graphArea.style.display = 'none';
+
+        // Проверка на бессмысленные действия
+        if (rawL === rawR && sign === '=') {
+          solutionSteps.push({
+            eq: `${rawL} = ${rawR}`,
+            text: '✅ Обе части одинаковые. Верно для всех x.'
+          });
+          currentEquation = { a: 0, b: 0, c: 0, sign, leftExpr, rightExpr, roots: null };
+          showStep();
+          return;
+        }
+
+        // Проверка на перенос нуля
+        if ((rawL === '0' || rawR === '0') && sign === '=') {
+          const nonZero = rawL === '0' ? rawR : rawL;
+          if (nonZero !== '0') {
+            solutionSteps.push({
+              eq: `${nonZero} = 0`,
+              text: 'Упрощено: перенесли нулевой член.'
+            });
+          }
+        }
+
+        solutionSteps.push({
+          eq: `${rawL} ${sign} ${rawR}`,
+          text: 'Исходное выражение.'
+        });
+
+        let f0 = evalExpr(leftExpr, 0) - evalExpr(rightExpr, 0);
+        let f1 = evalExpr(leftExpr, 1) - evalExpr(rightExpr, 1);
+        let fm1 = evalExpr(leftExpr, -1) - evalExpr(rightExpr, -1);
+
+        let c = f0;
+        let a = (f1 + fm1) / 2 - c;
+        let b = f1 - a - c;
+
+        a = Math.abs(a) < 1e-8 ? 0 : a;
+        b = Math.abs(b) < 1e-8 ? 0 : b;
+        c = Math.abs(c) < 1e-8 ? 0 : c;
+
+        currentEquation = { a, b, c, sign, leftExpr, rightExpr };
+
+        const isQuadratic = Math.abs(a) > 1e-8;
+        const isInequality = sign !== '=';
+
+        if (!isQuadratic) {
+          if (Math.abs(b) < 1e-8) {
+            if (Math.abs(c) < 1e-8) {
+              solutionSteps.push({ eq: '0 ' + sign + ' 0', text: '✅ Верно для всех x.' });
+              currentEquation.roots = null;
+            } else {
+              const isTrueIneq = (sign === '=' && c === 0) || 
+                                 (sign === '>' && c > 0) || 
+                                 (sign === '<' && c < 0) || 
+                                 (sign === '>=' && c >= 0) || 
+                                 (sign === '<=' && c <= 0);
+              if (isTrueIneq) {
+                solutionSteps.push({ eq: formatNum(c) + ' ' + sign + ' 0', text: '✅ Верно для всех x.' });
+                currentEquation.roots = null;
+              } else {
+                solutionSteps.push({ eq: formatNum(c) + ' ' + sign + ' 0', text: '❌ Нет решений.' });
+                currentEquation.roots = [];
+              }
+            }
+          } else {
+            let x = -c / b;
+            if (sign === '=') {
+              solutionSteps.push({
+                eq: `x = ${formatAnswer(x)}`,
+                text: `Ответ: x = ${formatAnswer(x)}.`
+              });
+              currentEquation.roots = [x];
+            } else {
+              let finalSign = sign;
+              if (b < 0) {
+                finalSign = sign === '>' ? '<' : sign === '<' ? '>' : sign === '>=' ? '<=' : '>=';
+              }
+              solutionSteps.push({
+                eq: `x ${finalSign} ${formatAnswer(x)}`,
+                text: `Решение: x ${finalSign} ${formatAnswer(x)}.`
+              });
+              currentEquation.roots = [x];
+              currentEquation.inequality = finalSign;
+            }
+          }
+        } else {
+          let D = b * b - 4 * a * c;
+          D = Math.abs(D) < 1e-8 ? 0 : D;
+
+          solutionSteps.push({
+            eq: `D = ${formatNum(D)}`,
+            text: 'Вычисляем дискриминант.'
+          });
+
+          if (D > 0) {
+            let sqrtD = Math.sqrt(D);
+            let x1 = (-b + sqrtD) / (2 * a);
+            let x2 = (-b - sqrtD) / (2 * a);
+            if (x1 > x2) [x1, x2] = [x2, x1];
+
+            if (sign === '=') {
+              currentEquation.roots = [x1, x2];
+              solutionSteps.push({
+                eq: `x₁ = ${formatAnswer(x1)}, x₂ = ${formatAnswer(x2)}`,
+                text: `Два корня: x₁ = ${formatAnswer(x1)}, x₂ = ${formatAnswer(x2)}.`
+              });
+            } else {
+              const aPos = a > 0;
+              let solution = '';
+              if (sign === '>') {
+                solution = aPos ? `x < ${formatAnswer(x1)} или x > ${formatAnswer(x2)}` : `${formatAnswer(x1)} < x < ${formatAnswer(x2)}`;
+              } else if (sign === '<') {
+                solution = aPos ? `${formatAnswer(x1)} < x < ${formatAnswer(x2)}` : `x < ${formatAnswer(x1)} или x > ${formatAnswer(x2)}`;
+              } else if (sign === '>=') {
+                solution = aPos ? `x ≤ ${formatAnswer(x1)} или x ≥ ${formatAnswer(x2)}` : `${formatAnswer(x1)} ≤ x ≤ ${formatAnswer(x2)}`;
+              } else if (sign === '<=') {
+                solution = aPos ? `${formatAnswer(x1)} ≤ x ≤ ${formatAnswer(x2)}` : `x ≤ ${formatAnswer(x1)} или x ≥ ${formatAnswer(x2)}`;
+              }
+              currentEquation.roots = [x1, x2];
+              currentEquation.inequality = sign;
+              solutionSteps.push({
+                eq: solution,
+                text: `Решение: ${solution}.`
+              });
+            }
+          } else if (Math.abs(D) < 1e-8) {
+            let x = -b / (2 * a);
+            if (sign === '=') {
+              currentEquation.roots = [x];
+              solutionSteps.push({
+                eq: `x = ${formatAnswer(x)}`,
+                text: `Один корень: x = ${formatAnswer(x)}.`
+              });
+            } else {
+              const isSolution = (sign === '>=' || sign === '<=');
+              if (isSolution) {
+                currentEquation.roots = [x];
+                solutionSteps.push({
+                  eq: `x = ${formatAnswer(x)}`,
+                  text: `Решение: x = ${formatAnswer(x)}.`
+                });
+              } else {
+                currentEquation.roots = [];
+                solutionSteps.push({
+                  eq: 'Нет решений',
+                  text: 'Нет решений.'
+                });
+              }
+            }
+          } else {
+            const aPos = a > 0;
+            let isSolution = false;
+            if (sign === '>' && aPos) isSolution = true;
+            else if (sign === '<' && !aPos) isSolution = true;
+            else if (sign === '>=' && aPos) isSolution = true;
+            else if (sign === '<=' && !aPos) isSolution = true;
+
+            if (isSolution) {
+              currentEquation.roots = null;
+              solutionSteps.push({
+                eq: 'D < 0',
+                text: '✅ Верно для всех x.'
+              });
+            } else {
+              currentEquation.roots = [];
+              solutionSteps.push({
+                eq: 'D < 0',
+                text: '❌ Нет решений.'
+              });
+            }
+          }
+        }
+
+        showStep();
+      } catch (e) {
+        progress.innerHTML = '';
+        explanation.innerHTML = `<div style="color: var(--danger);">${e.message}</div>`;
+        nextStepBtn.innerHTML = '';
+        stepArea.style.display = 'block';
+        graphArea.style.display = 'none';
+      }
+    }
+
+    function showStep() {
+      if (currentStep < solutionSteps.length) {
+        const step = solutionSteps[currentStep];
+        const total = solutionSteps.length;
+        const pct = ((currentStep + 1) / total) * 100;
+
+        progress.innerHTML = `
+          <div style="background: var(--border); border-radius: 4px; height: 8px; margin-bottom: 8px;">
+            <div style="background: var(--accent); height: 100%; border-radius: 4px; width: ${pct}%; transition: width 0.3s;"></div>
+          </div>
+          <span>Шаг ${currentStep + 1} из ${total}</span>
+        `;
+
+        explanation.innerHTML = `
+          <div style="font-size: 1.2em; font-weight: bold; color: var(--accent); margin-bottom: 8px;">${step.eq}</div>
+          <div>${step.text}</div>
+        `;
+
+        if (currentStep < solutionSteps.length - 1) {
+          nextStepBtn.innerHTML = '<button class="btn btn-primary" id="nextBtn">Следующий шаг →</button>';
+          document.getElementById('nextBtn').addEventListener('click', () => {
+            currentStep++;
+            showStep();
+          });
+        } else {
+          nextStepBtn.innerHTML = '<div style="color: var(--success); font-weight: bold;">✓ Решение завершено!</div>';
+          drawGraph();
+        }
+      }
+    }
+
+    // FIXED: Proper DPR-aware canvas resize
+    function resizeCanvas() {
+      const rect = graphCanvas.getBoundingClientRect();
+      const dpr = window.devicePixelRatio || 1;
+      graphCanvas.width = rect.width * dpr;
+      graphCanvas.height = rect.height * dpr;
+      
+      const ctx = graphCanvas.getContext('2d');
+      ctx.scale(dpr, dpr);
+      
+      // Clear scaling artifacts
+      ctx.clearRect(0, 0, rect.width, rect.height);
+      if (currentEquation) drawGraph();
+    }
+
+    function drawGraph() {
+      if (!currentEquation) return;
+
+      const { a, b, c, sign, roots } = currentEquation;
+      
+      if (roots !== null && roots.length === 0) {
+        graphArea.style.display = 'none';
+        return;
+      }
+
+      const isQuadratic = Math.abs(a) > 1e-8;
+
+      graphArea.style.display = 'block';
+      const ctx = graphCanvas.getContext('2d');
+      const rect = graphCanvas.getBoundingClientRect();
+      const w = rect.width;
+      const h = rect.height;
+
+      const z = Math.max(0.1, Math.min(graphZoom, 20)); // Clamp zoom 0.1-20
+      let xMin = -10 / z + graphOffsetX, xMax = 10 / z + graphOffsetX;
+      let yMin = -10 / z + graphOffsetY, yMax = 10 / z + graphOffsetY;
+
+      if (roots && roots.length > 0) {
+        const minR = Math.min(...roots);
+        const maxR = Math.max(...roots);
+        const range = maxR - minR || 1;
+        xMin = minR - range * 0.5;
+        xMax = maxR + range * 0.5;
+      }
+
+      if (isQuadratic) {
+        const vx = -b / (2 * a);
+        const vy = a * vx * vx + b * vx + c;
+        const yRange = Math.max(Math.abs(vy), 10);
+        yMin = -yRange - 2;
+        yMax = yRange + 2;
+        xMin = Math.min(xMin, vx - 5);
+        xMax = Math.max(xMax, vx + 5);
+      }
+
+      const xScale = w / (xMax - xMin);
+      const yScale = h / (yMax - yMin);
+      const scale = Math.min(xScale, yScale) * 0.8;
+      const offsetX = w / 2 - (xMin + xMax) / 2 * scale;
+      const offsetY = h / 2 + (yMin + yMax) / 2 * scale;
+
+      function toX(x) { return offsetX + x * scale; }
+      function toY(y) { return offsetY - y * scale; }
+
+      ctx.clearRect(0, 0, w, h);
+
+      ctx.strokeStyle = '#333';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(0, toY(0));
+      ctx.lineTo(w, toY(0));
+      ctx.moveTo(toX(0), 0);
+      ctx.lineTo(toX(0), h);
+      ctx.stroke();
+
+      ctx.fillStyle = '#333';
+      ctx.font = '12px sans-serif';
+      ctx.fillText('x', w - 20, toY(0) - 10);
+      ctx.fillText('y', toX(0) + 10, 20);
+
+      ctx.strokeStyle = '#ddd';
+      ctx.lineWidth = 1;
+      for (let x = Math.ceil(xMin); x <= Math.floor(xMax); x++) {
+        ctx.beginPath();
+        ctx.moveTo(toX(x), 0);
+        ctx.lineTo(toX(x), h);
+        ctx.stroke();
+      }
+      for (let y = Math.ceil(yMin); y <= Math.floor(yMax); y++) {
+        ctx.beginPath();
+        ctx.moveTo(0, toY(y));
+        ctx.lineTo(w, toY(y));
+        ctx.stroke();
+      }
+
+      ctx.strokeStyle = '#2196F3';
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      let first = true;
+      for (let px = 0; px <= w; px += 2) {
+        const x = (px - offsetX) / scale;
+        const y = a * x * x + b * x + c;
+        const py = toY(y);
+        if (py >= -100 && py <= h + 100) {
+          if (first) { ctx.moveTo(px, py); first = false; }
+          else ctx.lineTo(px, py);
+        }
+      }
+      ctx.stroke();
+
+      ctx.fillStyle = '#27ae60';
+      ctx.font = 'bold 11px sans-serif';
+
+      const yIntercept = c;
+      if (yIntercept >= yMin && yIntercept <= yMax) {
+        const py = toY(yIntercept);
+        ctx.beginPath();
+        ctx.arc(toX(0), py, 4, 0, 2 * Math.PI);
+        ctx.fill();
+        ctx.fillStyle = '#333';
+        ctx.fillText(`(0, ${formatNum(yIntercept)})`, toX(0) + 8, py - 8);
+        ctx.fillStyle = '#27ae60';
+      }
+
+      if (roots && roots.length > 0) {
+        roots.forEach((root, i) => {
+          const px = toX(root);
+          const py = toY(0);
+          ctx.beginPath();
+          ctx.arc(px, py, 5, 0, 2 * Math.PI);
+          ctx.fill();
+          ctx.fillStyle = '#333';
+          ctx.font = 'bold 12px sans-serif';
+          ctx.fillText(`(${formatAnswer(root)}, 0)`, px + 8, py - 10);
+          ctx.fillStyle = '#27ae60';
+        });
+      }
+
+      solutionExplanation.textContent = isQuadratic
+        ? `Парабола. ${roots && roots.length > 0 ? 'Корни отмечены зелёным.' : 'Корней нет.'}`
+        : `Прямая. ${roots && roots.length > 0 ? 'Корень отмечен зелёным.' : 'Корней нет.'}`;
+    }
+
+    startSolve.addEventListener('click', solveEquation);
+    resetBtn.addEventListener('click', () => {
+      leftPart.value = '';
+      rightPart.value = '';
+      signSelect.value = '=';
+      progress.innerHTML = '';
+      explanation.innerHTML = '';
+      nextStepBtn.innerHTML = '';
+      stepArea.style.display = 'none';
+      graphArea.style.display = 'none';
+      solutionSteps = [];
+      currentStep = 0;
+      currentEquation = null;
+      graphZoom = 1;
+      graphOffsetX = 0;
+      graphOffsetY = 0;
+    });
+
+    document.getElementById('toggleKeyboard').addEventListener('click', () => {
+      const kb = document.getElementById('keyboardContainer');
+      kb.style.display = kb.style.display === 'none' ? 'flex' : 'none';
+    });
+
+    document.getElementById('zoomOut').addEventListener('click', () => {
+      graphZoom /= 1.2;
+      if (currentEquation) drawGraph();
+    });
+
+    document.getElementById('zoomIn').addEventListener('click', () => {
+      graphZoom *= 1.2;
+      if (currentEquation) drawGraph();
+    });
+
+    // Setup canvas interactions
+    new ResizeObserver(resizeCanvas).observe(graphCanvas);
+    
+    document.getElementById('resetZoom').addEventListener('click', () => {
+      graphZoom = 1;
+      graphOffsetX = 0;
+      graphOffsetY = 0;
+      if (currentEquation) drawGraph();
+    });
+    
+    // Pan functionality
+    let isDragging = false;
+    let lastX, lastY;
+    
+    graphCanvas.addEventListener('mousedown', (e) => {
+      if (e.button === 0) { // Left button
+        isDragging = true;
+        lastX = e.clientX;
+        lastY = e.clientY;
+        graphCanvas.style.cursor = 'grabbing';
+        e.preventDefault();
+      }
+    });
+
+    // FIXED: Standardized pan sensitivity + bounds
+    graphCanvas.addEventListener('mousemove', (e) => {
+      if (isDragging) {
+        const dx = (e.clientX - lastX) / 100 / graphZoom;
+        const dy = (e.clientY - lastY) / 100 / graphZoom;
+        graphOffsetX += dx;
+        graphOffsetY -= dy;
+        
+        // Pan bounds (reasonable limits)
+        graphOffsetX = Math.max(-50, Math.min(50, graphOffsetX));
+        graphOffsetY = Math.max(-50, Math.min(50, graphOffsetY));
+        
+        lastX = e.clientX;
+        lastY = e.clientY;
+        drawGraph();
+      }
+    });
+
+    graphCanvas.addEventListener('mouseup', () => {
+      isDragging = false;
+      graphCanvas.style.cursor = 'grab';
+    });
+
+    graphCanvas.addEventListener('mouseleave', () => {
+      isDragging = false;
+      graphCanvas.style.cursor = 'grab';
+    });
+
+    // FIXED: Single clean zoom/pan handlers with bounds
+    function clampZoom(z) { return Math.max(0.1, Math.min(20, z)); }
+    
+    document.getElementById('zoomOut').addEventListener('click', () => {
+      graphZoom = clampZoom(graphZoom / 1.2);
+      drawGraph();
+    });
+
+    document.getElementById('zoomIn').addEventListener('click', () => {
+      graphZoom = clampZoom(graphZoom * 1.2);
+      drawGraph();
+    });
+
+    document.getElementById('resetZoom').addEventListener('click', () => {
+      graphZoom = 1;
+      graphOffsetX = graphOffsetY = 0;
+      drawGraph();
+    });
+
+    // FIXED: Proper wheel zoom centered on mouse
+    graphCanvas.addEventListener('wheel', (e) => {
+      e.preventDefault();
+      const rect = graphCanvas.getBoundingClientRect();
+      const x = (e.clientX - rect.left) / rect.width;
+      const y = (e.clientY - rect.top) / rect.height;
+      
+      const oldZoom = graphZoom;
+      const factor = e.deltaY < 0 ? 1.15 : 1/1.15;
+      graphZoom = clampZoom(graphZoom * factor);
+      
+      // Zoom towards mouse position
+      graphOffsetX = x * 20 / oldZoom - x * 20 / graphZoom + graphOffsetX;
+      graphOffsetY = (1-y) * 20 / oldZoom - (1-y) * 20 / graphZoom + graphOffsetY;
+      
+      drawGraph();
+    }, { passive: false });
+  </script>
+</body>
+</html>

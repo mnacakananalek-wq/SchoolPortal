@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Учебные материалы — Школьный портал</title>
+  <link rel="stylesheet" href="styles (1).css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="logo" href="./index (1).html">Школьный портал</a>
+      <nav class="nav">
+        <a href="./index (1).html" class="nav-link">Главная</a>
+        <a href="./subjects (1).html" class="nav-link active">Учебные материалы</a>
+        <a href="./contact (1).html" class="nav-link">Связь</a>
+      </nav>
+      <button class="mobile-menu-btn" id="mobileMenuBtn" title="Меню">☰</button>
+      <div class="mobile-dropdown" id="mobileDropdown">
+        <a href="./index (1).html" class="nav-link">Главная</a>
+        <a href="./subjects (1).html" class="nav-link active">Учебные материалы</a>
+        <a href="./contact (1).html" class="nav-link">Связь</a>
+      </div>
+      <button class="theme-toggle" data-toggle-theme title="Переключить тему">
+        <span class="toggle-slider"></span>
+      </button>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="breadcrumbs"><a class="link" href="./index (1).html">Главная</a> / Учебные материалы</div>
+    <h1 class="section-title">Предметы</h1>
+
+    <div class="tools-row">
+      <input class="input" id="subjectSearch" type="search" placeholder="Поиск предмета... (например, Физика)" />
+      <span class="notice">Найдено: <span id="foundCount">0</span></span>
+    </div>
+
+    <div class="grid-cards" id="subjectsGrid">
+      <!-- Карточки предметов -->
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p>© 2026 Школьный портал</p>
+      <a class="link" href="./contact (1).html">Связаться с нами</a>
+    </div>
+  </footer>
+
+  <script>
+    const subjects = [
+      { name: 'Алгебра', slug: 'algebra', desc: 'Решение уравнений и неравенств пошагово.' },
+      { name: 'Геометрия', slug: 'geometry', desc: 'Интерактивный конструктор фигур.' },
+      { name: 'Физика', slug: 'physics', desc: 'Интерактивная таблица обозначений.' },
+      { name: 'Информатика', slug: 'informatics (1)', desc: 'Перевод чисел между системами счисления.' },
+      { name: 'География', slug: 'geography', desc: 'Поиск стран и сведения о них.' },
+      { name: 'История', slug: 'history', desc: 'Правители и временная шкала событий.' },
+      { name: 'Химия', slug: 'chemistry', desc: 'Теория химии и естествознания.' },
+      { name: 'Русский язык', slug: 'russian', desc: 'Части речи и характеристики.' },
+      { name: 'Биология', slug: 'biology', desc: 'Органы человека и их функции.' },
+    ];
+
+    const grid = document.getElementById('subjectsGrid');
+    const search = document.getElementById('subjectSearch');
+    const foundCount = document.getElementById('foundCount');
+
+    function render(list) {
+      grid.innerHTML = list.map(s => `
+        <a class="subject-card" href="./${s.slug}.html">
+          <span class="subject-name">${s.name}</span>
+          <span class="subject-desc">${s.desc}</span>
+        </a>
+      `).join('');
+      foundCount.textContent = list.length;
+    }
+
+    render(subjects);
+
+    search.addEventListener('input', () => {
+      const q = search.value.trim().toLowerCase();
+      const filtered = subjects.filter(s => s.name.toLowerCase().includes(q));
+      render(filtered);
+    });
+  </script>
+  <script src="script (1).js"></script>
+</body>
+</html>
